@@ -27,9 +27,12 @@ services:
       - POSTGRES_USER=odoo
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
+      - ./data/postgres/0-init-user.sh:/docker-entrypoint-initdb.d/0-init-user.sh
 
   pgbouncer:
-    image: edoburu/pgbouncer:1.17.0
+    # image: repodevs/pgbouncer:1.17.0
+    build:
+      context: ./apps/pgbouncer/
     depends_on:
       - db
     ports:
@@ -41,7 +44,7 @@ services:
       - DB_USER=odoo
       - DB_PASSWORD=odoo
       - POOL_MODE=transaction
-      - MAX_CLIENT_CONN=500
+      - MAX_CLIENT_CONN=2000
 
 volumes:
   odoo-web-data:
